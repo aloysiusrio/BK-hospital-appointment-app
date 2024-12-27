@@ -59,7 +59,7 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $item->periksa?->tgl_periksa }}</td>
-                                                <td>{{ $item->pasien->name }}</td>
+                                                <td>{{ $item->pasien->name }}</td>                                                
                                                 <td>{{ $item->keluhan }}</td>
                                                 <td>{{ $item->periksa->catatan }}</td>
                                                 <td>

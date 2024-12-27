@@ -19,12 +19,24 @@ class DashboardController extends Controller
     public function index()
     {
         if (Auth::user()->role == 'dokter') {
-            $pasien_today = DaftarPoli::whereDate('created_at', date('Y-m-d'))->count();
-            $pasien_waiting = DaftarPoli::whereDate('created_at', date('Y-m-d'))->where('status', 'waiting')->count();
-            $pasien_called = DaftarPoli::whereDate('created_at', date('Y-m-d'))->where('status', 'called')->count();
-            $pasien_canceled = DaftarPoli::whereDate('created_at', date('Y-m-d'))->where('status', 'canceled')->count();
-            $pasien_done = DaftarPoli::whereDate('created_at', date('Y-m-d'))->where('status', 'done')->count();
-            return view('dashboard.index', compact('pasien_today', 'pasien_waiting', 'pasien_called', 'pasien_canceled', 'pasien_done'));
+            $dokter = Auth::user()->dokter;
+            $pasien_today = DaftarPoli::whereHas('jadwal.dokter', function ($query) use ($dokter) {
+                $query->where('id', $dokter->id);
+            })->whereDate('created_at', date('Y-m-d'))->count();
+        
+            $pasien_done = DaftarPoli::whereHas('jadwal.dokter', function ($query) use ($dokter) {
+                $query->where('id', $dokter->id);
+            })->where('status', 'done')->count();
+        
+            $pasien_waiting = DaftarPoli::whereHas('jadwal.dokter', function ($query) use ($dokter) {
+                $query->where('id', $dokter->id);
+            })->where('status', 'waiting')->count();
+        
+            $pasien_canceled = DaftarPoli::whereHas('jadwal.dokter', function ($query) use ($dokter) {
+                $query->where('id', $dokter->id);
+            })->where('status', 'canceled')->count();
+        
+            return view('dashboard.index', compact('pasien_today', 'pasien_done', 'pasien_waiting', 'pasien_canceled'));
         } elseif (Auth::user()->role == 'admin') {
             $total_dokter = Dokter::all()->count();
             $total_pasien = Pasien::all()->count();

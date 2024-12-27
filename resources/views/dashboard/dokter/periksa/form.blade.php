@@ -77,15 +77,22 @@
 
                                     <div class="mb-3">
                                         <label for="obats" class="form-label">Obat yang Diberikan</label>
-                                        <select id="obats" name="obats[]" class="form-select js-example-basic-multiple" multiple="multiple">
-                                            @foreach ($obats as $item)
-                                                <option value="{{ $item->id }}"
-                                                    {{ $daftar->periksa && in_array($item->id, $daftar->periksa->obatDetail->pluck('obat_id')->toArray()) ? 'selected' : '' }}>
-                                                    {{ $item->name }} - Rp. {{ number_format($item->harga, 0, ',', '.') }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                        <div>
+                                            <select id="obats" name="obats[]" class="form-select js-example-basic-multiple w-100" multiple="multiple">
+                                                @foreach ($obats as $item)
+                                                    <option value="{{ $item->id }}" data-harga="{{ $item->harga }}"
+                                                        {{ $daftar->periksa && in_array($item->id, $daftar->periksa->obatDetail->pluck('obat_id')->toArray()) ? 'selected' : '' }}>
+                                                        {{ $item->name }} - Rp. {{ number_format($item->harga, 0, ',', '.') }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
+
+                                    <div class="mb-3">
+                                        <label for="biaya_total" class="form-label">Total Biaya</label>
+                                        <input type="text" id="biaya_total" class="form-control" value="" disabled>
+                                    </div>                                                                        
 
                                     <div class="text-end">
                                         <button class="btn btn-primary" type="submit">
@@ -111,10 +118,36 @@
     <!-- DataTables & Plugins -->
     <script src="{{ asset('assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
             $('.js-example-basic-multiple').select2();
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+    const biayaTotalInput = document.getElementById('biaya_total');
+    const hargaAwal = 150000;
+
+    function calculateTotalCost() {
+        const selectObats = document.getElementById('obats');
+        let totalObatHarga = 0;
+        
+        const selectedOptions = Array.from(selectObats.selectedOptions);
+
+        selectedOptions.forEach(option => {
+            const hargaObat = parseFloat(option.getAttribute('data-harga') || 0); 
+            totalObatHarga += hargaObat;
+        });
+
+        const totalBiaya = hargaAwal + totalObatHarga; 
+        biayaTotalInput.value = `Rp. ${totalBiaya.toLocaleString('id-ID', { minimumFractionDigits: 0 })}`; 
+    }
+
+    $('#obats').on('change', calculateTotalCost);
+
+    calculateTotalCost();
+});
     </script>
 @endsection

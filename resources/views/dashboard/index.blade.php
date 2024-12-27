@@ -100,10 +100,10 @@
                             <div class="small-box bg-info">
                                 <div class="inner">
                                     <h3>
-                                        {{ $pasien_today }}
+                                        {{ $pasien_waiting }}
                                     </h3>
 
-                                    <p>Total Pasien</p>
+                                    <p>Total Pasien Belum Diperiksa</p>
                                 </div>
                                 <div class="icon">
                                     <i class="ion ion-stats-bars"></i>

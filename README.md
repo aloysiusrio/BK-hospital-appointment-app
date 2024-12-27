@@ -85,8 +85,20 @@ Pastikan Anda telah menginstal prasyarat berikut di mesin Anda:
 
     Buka browser dan akses: [http://localhost:8000](http://localhost:8000)
 
-8. **Informasi Login Admin**
+8. **Informasi Login**
+   admin :
+
     - **Email**: `admin@admin.com`
     - **Password**: `admin`
+
+    dokter :
+
+    - **Email**: `aloy@dokter.com`
+    - **Password**: `dokter`
+
+    pasien :
+
+    - **Email**: `raiden@pasien.com`
+    - **Password**: `pasien`
 
 ---

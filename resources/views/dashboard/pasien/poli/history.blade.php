@@ -46,7 +46,6 @@
                                             Jam : {{ date('H:i', strtotime($periksa->jadwal->jam_mulai)) }} s/d
                                             {{ date('H:i', strtotime($periksa->jadwal->jam_selesai)) }}
                                             <br>
-                                            Tanggal : {{ Carbon\Carbon::parse($periksa->created_at)->format('d F Y') }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -172,7 +171,7 @@
                                     </table>
                                     <br>
                                     <br>
-                                    <h5>Total Pembayaran</h5>
+                                    <h5>Total Biaya</h5>
                                     <table class="table table-bordered">
                                         <tr>
                                             <th>
@@ -191,7 +190,7 @@
                                                 {{ number_format($periksa->periksa?->biaya_periksa - 150000, 0, ',', '.') }}
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr class="table-success">
                                             <th>
                                                 Total
                                             </th>

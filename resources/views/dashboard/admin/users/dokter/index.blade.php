@@ -25,7 +25,7 @@
                             <div class="card-header">
                                 <button type="button" class="btn btn-primary" data-toggle="modal"
                                     data-target="#modalTambah">
-                                    <i class="fas fa-file"></i> Tambah Data
+                                    <i class="fas fa-file"></i> Tambah Dokter
                                 </button>
                                 {{-- message error validation --}}
                                 @if ($errors->any())

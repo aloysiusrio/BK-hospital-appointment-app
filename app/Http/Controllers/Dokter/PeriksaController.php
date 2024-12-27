@@ -86,7 +86,7 @@ class PeriksaController extends Controller
     {
         $daftar = DaftarPoli::findOrfail($id);
 
-        $validation  = $request->validate([
+        $validation = $request->validate([
             'tgl_periksa' => 'required|date',
             'catatan' => 'required',
             'obats' => 'required|array',
@@ -94,20 +94,24 @@ class PeriksaController extends Controller
 
         try {
             DB::beginTransaction();
+            
             $daftar->periksa()->update([
                 'tgl_periksa' => $validation['tgl_periksa'],
                 'catatan' => $validation['catatan'],
             ]);
-
+        
+            $daftar->periksa->obatDetail()->delete();
+            
             $biaya_periksa = 0;
             foreach ($validation['obats'] as $obat_id) {
                 $obat = Obat::findOrfail($obat_id);
                 $biaya_periksa += (int) $obat->harga;
-                $daftar->periksa->obatDetail()->updateOrCreate([
+
+                $daftar->periksa->obatDetail()->create([
                     'obat_id' => $obat->id,
                 ]);
             }
-
+            
             $daftar->update([
                 'status' => 'done',
             ]);
@@ -119,20 +123,21 @@ class PeriksaController extends Controller
 
             DB::commit();
 
-            $notification = array(
+            $notification = [
                 'status' => 'success',
                 'title' => 'Berhasil',
-                'message' => 'Berhasil melakukan pemeriksaan ',
-            );
+                'message' => 'Berhasil melakukan pemeriksaan',
+            ];
             return redirect()->route('dashboard.dokter.periksa.index')->with($notification);
         } catch (\Throwable $th) {
             DB::rollback();
             Log::error($th);
-            $notification = array(
+
+            $notification = [
                 'status' => 'error',
                 'title' => 'Gagal',
                 'message' => 'Gagal melakukan pemeriksaan',
-            );
+            ];
             return redirect()->back()->with($notification);
         }
     }

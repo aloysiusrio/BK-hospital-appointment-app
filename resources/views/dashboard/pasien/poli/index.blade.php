@@ -41,6 +41,9 @@
                                     </div>
                                 </div>
                             @endif
+                            <div class="card-header bg-primary text-white">
+                                <h3 class="card-title">Daftar Poli</h3>
+                            </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-8 mx-auto">
@@ -117,7 +120,6 @@
                                                         <br> Jam {{ $item->jadwal->jam_mulai }} s/d
                                                         {{ $item->jadwal->jam_selesai }}
                                                         <br>
-                                                        Tanggal {{ Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}
                                                     </td>
                                                     <td>
                                                         {{ $item->jadwal->dokter->name }}
