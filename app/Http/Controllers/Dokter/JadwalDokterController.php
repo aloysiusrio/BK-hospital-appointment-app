@@ -48,15 +48,12 @@ class JadwalDokterController extends Controller
         //     return redirect()->back()->with($notification);
         // }
 
-        $conflictingDaySchedule = JadwalPeriksa::where('dokter_id', $user->dokter->id)
-            ->where('hari', $request->hari)            
-            ->first();
-
-        if ($conflictingDaySchedule) {
+        // Cek konflik jadwal berdasarkan hari
+        if ($this->hasConflictingDaySchedule($user->dokter->id, $request->hari)) {
             $notification = [
                 'status' => 'error',
                 'title' => 'Gagal',
-                'message' => 'anda sudah memiliki jadwal di hari ini, silahkan pilih hari lain',
+                'message' => 'Anda sudah memiliki jadwal di hari ini, silahkan pilih hari lain.',
             ];
             return redirect()->back()->with($notification);
         }
@@ -152,4 +149,10 @@ class JadwalDokterController extends Controller
             ->with('success', 'Jadwal berhasil dihapus.');
     }
 
+    private function hasConflictingDaySchedule($dokterId, $hari)
+    {
+        return JadwalPeriksa::where('dokter_id', $dokterId)
+            ->where('hari', $hari)
+            ->exists();
+    }
 }
