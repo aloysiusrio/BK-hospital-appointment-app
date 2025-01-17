@@ -27,23 +27,36 @@ class JadwalDokterController extends Controller
         ]);
 
         // Pastikan jadwal tidak bertabrakan
-        $conflictingSchedule = JadwalPeriksa::where('dokter_id', $user->dokter->id)
-            ->where('hari', $request->hari)
-            ->where(function ($query) use ($request) {
-                $query->whereBetween('jam_mulai', [$request->jam_mulai, $request->jam_selesai])
-                    ->orWhereBetween('jam_selesai', [$request->jam_mulai, $request->jam_selesai])
-                    ->orWhere(function ($q) use ($request) {
-                        $q->where('jam_mulai', '<=', $request->jam_mulai)
-                            ->where('jam_selesai', '>=', $request->jam_selesai);
-                    });
-            })
+        // $conflictingSchedule = JadwalPeriksa::where('dokter_id', $user->dokter->id)
+        //     ->where('hari', $request->hari)
+        //     ->where(function ($query) use ($request) {
+        //         $query->whereBetween('jam_mulai', [$request->jam_mulai, $request->jam_selesai])
+        //             ->orWhereBetween('jam_selesai', [$request->jam_mulai, $request->jam_selesai])
+        //             ->orWhere(function ($q) use ($request) {
+        //                 $q->where('jam_mulai', '<=', $request->jam_mulai)
+        //                     ->where('jam_selesai', '>=', $request->jam_selesai);
+        //             });
+        //     })
+        //     ->first();
+
+        // if ($conflictingSchedule) {
+        //     $notification = [
+        //         'status' => 'error',
+        //         'title' => 'Gagal',
+        //         'message' => 'Jadwal bertabrakan dengan jadwal lain',
+        //     ];
+        //     return redirect()->back()->with($notification);
+        // }
+
+        $conflictingDaySchedule = JadwalPeriksa::where('dokter_id', $user->dokter->id)
+            ->where('hari', $request->hari)            
             ->first();
 
-        if ($conflictingSchedule) {
+        if ($conflictingDaySchedule) {
             $notification = [
                 'status' => 'error',
                 'title' => 'Gagal',
-                'message' => 'Jadwal bertabrakan dengan jadwal lain',
+                'message' => 'anda sudah memiliki jadwal di hari ini, silahkan pilih hari lain',
             ];
             return redirect()->back()->with($notification);
         }
